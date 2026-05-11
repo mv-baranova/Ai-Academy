@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserStore, EducationStage } from '../store/useUserStore';
 import { Sparkles, ChevronRight, GraduationCap, Target, Brain, Activity } from 'lucide-react';
+import { CharacterCustomization } from './CharacterCustomization';
 
 export const Onboarding = () => {
   const [step, setStep] = useState(0);
@@ -14,7 +15,9 @@ export const Onboarding = () => {
     goals: [] as string[],
     weakSubjects: [] as string[],
     learningStyle: '',
-    knowledgeLevel: 'Средний'
+    knowledgeLevel: 'Средний',
+    gender: '' as any,
+    appearance: 'standard'
   });
 
   const educationStages: EducationStage[] = [
@@ -186,12 +189,23 @@ export const Onboarding = () => {
                 ))}
               </div>
               <button
-                onClick={handleFinish}
+                onClick={handleNext}
                 disabled={!formData.learningStyle}
-                className="w-full mt-12 bg-white text-black py-5 rounded-2xl font-bold text-xl shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                className="w-full mt-12 glass-premium py-5 rounded-2xl font-bold text-xl"
               >
-                Войти в Орден
+                Далее
               </button>
+            </motion.div>
+          )}
+
+          {step === 5 && (
+            <motion.div key="step5" variants={containerVariants} initial="hidden" animate="visible" exit="exit">
+              <CharacterCustomization
+                onComplete={(data) => {
+                  setFormData({ ...formData, ...data });
+                  setTimeout(handleFinish, 100);
+                }}
+              />
             </motion.div>
           )}
         </AnimatePresence>

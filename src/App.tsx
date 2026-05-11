@@ -8,9 +8,9 @@ import { MagisterTutor } from './components/MagisterTutor';
 import { ProfileDashboard } from './components/ProfileDashboard';
 import { LearningSession } from './components/LearningSession';
 import { useUserStore } from './store/useUserStore';
-import { EDUCATIONAL_CONTENT } from './data/educationalContent';
+import { CASE_FILES_CONTENT } from './data/educationalContent';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, User, GraduationCap } from 'lucide-react';
+import { Sparkles, User, GraduationCap, ChevronDown } from 'lucide-react';
 
 function App() {
   const { onboarded, username } = useUserStore();
@@ -24,68 +24,88 @@ function App() {
     setIsTutorOpen(true);
   };
 
-  const selectedSubjectContent = selectedSubjectId ? EDUCATIONAL_CONTENT[selectedSubjectId] : null;
+  const selectedSubjectContent = selectedSubjectId ? CASE_FILES_CONTENT[selectedSubjectId] : null;
 
   return (
-    <div className="relative w-full h-screen bg-nexus-gradient overflow-hidden font-sans text-white">
+    <div className="relative w-full h-screen bg-nexus-deep overflow-hidden font-sans text-white">
       {!onboarded && <Onboarding />}
 
       {onboarded && (
         <>
           <TopBar />
 
-          {/* 3D Background */}
-          <div className="absolute inset-0 z-0 bg-nexus-glow">
-            <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+          {/* Cinematic 3D Environment */}
+          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-nexus-deep z-10 pointer-events-none" />
+            <Canvas camera={{ position: [0, 0, 10], fov: 40 }}>
               <CentralHub />
             </Canvas>
           </div>
 
-          {/* UI Overlay */}
-          <div className="absolute inset-0 z-10 flex flex-col justify-between pointer-events-none p-6 pb-12">
-            <div /> {/* Spacer */}
+          {/* Main Content Overlay */}
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-between pointer-events-none py-12 px-6">
 
-            <div className="flex flex-col items-center space-y-12">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center space-y-2"
+            {/* Header Brand Section */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-20 flex flex-col items-center"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="h-px w-12 bg-gradient-to-r from-transparent to-nexus-blue" />
+                <div className="w-2 h-2 rounded-full bg-nexus-blue animate-pulse shadow-nexus-neon" />
+                <div className="h-px w-12 bg-gradient-to-l from-transparent to-nexus-blue" />
+              </div>
+              <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase italic text-center leading-none">
+                Орден <br/>
+                <span className="text-nexus-blue neon-text-blue block mt-2">Знаний</span>
+              </h1>
+              <div className="flex items-center gap-3 mt-6">
+                 <span className="text-white/20 text-[10px] tracking-[0.6em] uppercase font-black">Archive Access Level: Clear</span>
+              </div>
+            </motion.div>
+
+            {/* Content Explorer */}
+            <div className="w-full max-w-6xl pointer-events-auto mt-auto mb-12">
+              <div className="flex items-center justify-between mb-6 px-4">
+                 <div className="flex items-center gap-3">
+                    <div className="w-1 h-8 bg-nexus-blue rounded-full" />
+                    <div>
+                       <h3 className="font-black uppercase tracking-widest text-sm">Доступные Архивы</h3>
+                       <p className="text-[10px] text-white/30 uppercase font-bold">Выберите дело для исследования</p>
+                    </div>
+                 </div>
+                 <div className="flex items-center gap-2 text-white/20">
+                    <span className="text-[10px] font-black uppercase tracking-widest">Листайте вправо</span>
+                    <ChevronDown className="rotate-[-90deg]" size={14} />
+                 </div>
+              </div>
+              <SubjectPortals onSelect={setSelectedSubjectId} />
+            </div>
+
+            {/* Action Bar */}
+            <div className="flex gap-6 justify-center w-full max-w-xl pointer-events-auto relative">
+              <div className="absolute -inset-10 bg-nexus-blue/5 blur-3xl rounded-full pointer-events-none" />
+
+              <motion.button
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleOpenTutor()}
+                className="flex-1 glass-premium py-6 rounded-[2.5rem] flex items-center justify-center gap-4 font-black text-nexus-blue shadow-nexus-neon border border-nexus-blue/30 uppercase tracking-[0.2em] text-sm relative overflow-hidden group"
               >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <div className="h-px w-8 bg-gradient-to-r from-transparent to-nexus-blue" />
-                  <GraduationCap className="text-nexus-blue" size={20} />
-                  <div className="h-px w-8 bg-gradient-to-l from-transparent to-nexus-blue" />
-                </div>
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase italic">
-                  Орден <span className="text-nexus-blue neon-text-blue">Знаний</span>
-                </h1>
-                <p className="text-white/30 text-xs md:text-sm tracking-[0.5em] uppercase font-bold">Путь к великой истине</p>
-              </motion.div>
+                <div className="absolute inset-0 bg-nexus-blue/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Sparkles size={20} className="group-hover:animate-spin-slow" />
+                Магистр ИИ
+              </motion.button>
 
-              <div className="w-full max-w-5xl pointer-events-auto">
-                <SubjectPortals onSelect={setSelectedSubjectId} />
-              </div>
-
-              <div className="flex gap-4 justify-center w-full max-w-md pointer-events-auto">
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleOpenTutor()}
-                  className="flex-1 glass-premium py-5 rounded-[2rem] flex items-center justify-center gap-3 font-black text-nexus-blue shadow-nexus-neon border border-nexus-blue/30 uppercase tracking-widest text-sm"
-                >
-                  <Sparkles size={20} />
-                  Магистр
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsProfileOpen(true)}
-                  className="w-20 h-20 glass-premium rounded-[2rem] flex items-center justify-center text-white/70 border border-white/10"
-                >
-                  <User size={32} />
-                </motion.button>
-              </div>
+              <motion.button
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsProfileOpen(true)}
+                className="w-20 h-20 glass-premium rounded-[2.5rem] flex items-center justify-center text-white/70 border border-white/10 shadow-premium group"
+              >
+                <User size={32} className="group-hover:text-nexus-blue transition-colors" />
+              </motion.button>
             </div>
           </div>
 
