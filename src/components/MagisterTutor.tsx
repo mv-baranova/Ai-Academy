@@ -19,15 +19,18 @@ export const MagisterTutor = ({ isOpen, onClose, initialContext }: MagisterTutor
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([
-        {
-          role: 'assistant',
-          content: `Приветствую, Искатель ${username}! Я Магистр Знаний. ${initialContext ? `Вижу, твоё расследование привело тебя к "${initialContext}".` : 'Все архивы Ордена открыты перед тобой.'} Чем я могу помочь?`,
-          timestamp: Date.now()
-        }
-      ]);
-    }
+    setMessages(prev => {
+      if (prev.length === 0) {
+        return [
+          {
+            role: 'assistant',
+            content: `Приветствую, Искатель ${username}! Я Магистр Знаний. ${initialContext ? `Вижу, твоё расследование привело тебя к "${initialContext}".` : 'Все архивы Ордена открыты перед тобой.'} Чем я могу помочь?`,
+            timestamp: Date.now()
+          }
+        ];
+      }
+      return prev;
+    });
   }, [username, initialContext]);
 
   useEffect(() => {

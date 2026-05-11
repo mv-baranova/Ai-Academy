@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, Sphere, MeshDistortMaterial, Stars, Torus, Environment } from '@react-three/drei';
 import * as THREE from 'three';
@@ -56,7 +56,7 @@ export const CentralHub = () => {
         </Torus>
 
         {/* Ambient Particles */}
-        {[...Array(40)].map((_, i) => (
+        {useMemo(() => [...Array(40)].map((_, i) => (
           <Float key={i} speed={Math.random() * 2} floatIntensity={5}>
             <mesh position={[
               (Math.random() - 0.5) * 15,
@@ -71,7 +71,7 @@ export const CentralHub = () => {
               />
             </mesh>
           </Float>
-        ))}
+        )), [])}
       </group>
 
       <ambientLight intensity={0.1} />
