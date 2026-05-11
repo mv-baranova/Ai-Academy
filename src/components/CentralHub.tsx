@@ -1,48 +1,67 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Float, Sphere, MeshDistortMaterial, MeshWobbleMaterial } from '@react-three/drei';
+import { Float, Sphere, MeshDistortMaterial, MeshWobbleMaterial, Stars, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 
 export const CentralHub = () => {
   const groupRef = useRef<THREE.Group>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
+    const time = state.clock.getElapsedTime();
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.005;
+      groupRef.current.rotation.y = Math.sin(time * 0.1) * 0.2;
+      groupRef.current.rotation.x = Math.cos(time * 0.1) * 0.1;
     }
   });
 
   return (
-    <group ref={groupRef}>
-      {/* Central Core */}
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-        <Sphere args={[1, 64, 64]}>
-          <MeshDistortMaterial
-            color="#00f2ff"
-            speed={3}
-            distort={0.4}
-            radius={1}
-            emissive="#004d4d"
-          />
-        </Sphere>
-      </Float>
+    <>
+      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
 
-      {/* Orbiting Elements */}
-      {[...Array(5)].map((_, i) => (
-        <group key={i} rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}>
-          <mesh position={[2.5, 0, 0]}>
-            <sphereGeometry args={[0.1, 16, 16]} />
-            <meshStandardMaterial color="#7000ff" emissive="#350080" />
+      <group ref={groupRef}>
+        {/* Main Central Sphere */}
+        <Float speed={2} rotationIntensity={1} floatIntensity={2}>
+          <Sphere ref={coreRef} args={[1.2, 64, 64]}>
+            <MeshDistortMaterial
+              color="#00f2ff"
+              speed={2}
+              distort={0.3}
+              radius={1}
+              emissive="#004d4d"
+              roughness={0.2}
+              metalness={0.8}
+            />
+          </Sphere>
+        </Float>
+
+        {/* Orbiting Rings */}
+        {[...Array(3)].map((_, i) => (
+          <mesh key={i} rotation={[Math.PI / (i + 1.5), i * 1.2, 0]}>
+            <torusGeometry args={[2.5 + i * 0.4, 0.01, 16, 100]} />
+            <meshStandardMaterial color="#7000ff" emissive="#350080" emissiveIntensity={2} transparent opacity={0.3} />
           </mesh>
-        </group>
-      ))}
+        ))}
 
-      {/* Grid Floor */}
-      <gridHelper args={[20, 20, '#111', '#050505']} position={[0, -2, 0]} />
+        {/* Glow Particles */}
+        {[...Array(20)].map((_, i) => (
+          <Float key={i} speed={Math.random() * 5} floatIntensity={2}>
+            <mesh position={[
+              (Math.random() - 0.5) * 8,
+              (Math.random() - 0.5) * 8,
+              (Math.random() - 0.5) * 8
+            ]}>
+              <sphereGeometry args={[0.02, 8, 8]} />
+              <meshStandardMaterial color="#00f2ff" emissive="#00f2ff" emissiveIntensity={5} />
+            </mesh>
+          </Float>
+        ))}
+      </group>
 
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#00f2ff" />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#7000ff" />
-    </group>
+      <ambientLight intensity={0.2} />
+      <pointLight position={[5, 5, 5]} intensity={2} color="#00f2ff" />
+      <pointLight position={[-5, -5, -5]} intensity={1} color="#7000ff" />
+      <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={1} castShadow />
+    </>
   );
 };
