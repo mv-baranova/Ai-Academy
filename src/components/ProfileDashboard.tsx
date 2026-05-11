@@ -4,9 +4,11 @@ import { useUserStore } from '../store/useUserStore';
 import {
   X, User, Award, BookOpen, TrendingUp,
   Flame, Star, Calendar, Target, Settings,
-  LogOut, Shield, Zap
+  LogOut, Shield, Zap, Users, LineChart
 } from 'lucide-react';
-import { SUBJECTS } from '../constants';
+import { CASE_FILES } from '../constants';
+import { Leaderboard } from './Leaderboard';
+import { ParentAnalytics } from './ParentAnalytics';
 
 interface ProfileDashboardProps {
   isOpen: boolean;
@@ -17,8 +19,10 @@ export const ProfileDashboard = ({ isOpen, onClose }: ProfileDashboardProps) => 
   const {
     username, level, xp, tokens, achievements,
     subjectsProgression, completedLessons,
-    educationStage, age, goals
+    educationStage, age, goals, rank, titles, artifacts
   } = useUserStore();
+
+  const [activeTab, setActiveTab] = React.useState<'profile' | 'social' | 'analytics'>('profile');
 
   const totalLessons = completedLessons.length;
   const progressToNext = (xp / (level * 1000)) * 100;
@@ -41,13 +45,43 @@ export const ProfileDashboard = ({ isOpen, onClose }: ProfileDashboardProps) => 
         >
           <div className="max-w-2xl mx-auto p-6 pt-20 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center mb-10">
-              <h2 className="text-3xl font-black italic uppercase tracking-tighter">Профиль <span className="text-nexus-blue">Ордена</span></h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-black italic uppercase tracking-tighter">Архив <span className="text-nexus-blue">Искателя</span></h2>
               <button onClick={onClose} className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all border border-white/10">
                 <X size={24} />
               </button>
             </div>
 
+            {/* Tabs */}
+            <div className="flex gap-2 mb-10 bg-white/5 p-1.5 rounded-[1.5rem] border border-white/10">
+               {[
+                 { id: 'profile', icon: User, label: 'Личность' },
+                 { id: 'social', icon: Users, label: 'Совет' },
+                 { id: 'analytics', icon: LineChart, label: 'Анализ' }
+               ].map(tab => (
+                 <button
+                   key={tab.id}
+                   onClick={() => setActiveTab(tab.id as any)}
+                   className={`flex-1 py-3 rounded-2xl flex items-center justify-center gap-2 transition-all ${
+                     activeTab === tab.id
+                     ? 'bg-nexus-blue text-black font-black shadow-nexus-neon'
+                     : 'text-white/40 hover:text-white/70'
+                   }`}
+                 >
+                   <tab.icon size={18} />
+                   <span className="text-xs uppercase tracking-widest hidden md:block">{tab.label}</span>
+                 </button>
+               ))}
+            </div>
+
+            <AnimatePresence mode="wait">
+            {activeTab === 'profile' && (
+              <motion.div
+                key="profile-tab"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
             {/* Profile Info */}
             <div className="glass-premium rounded-[3rem] p-8 mb-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-nexus-blue/10 blur-[60px] rounded-full -mr-10 -mt-10" />
@@ -69,8 +103,8 @@ export const ProfileDashboard = ({ isOpen, onClose }: ProfileDashboardProps) => 
                 <div className="text-center md:text-left flex-1">
                   <h3 className="text-3xl font-bold mb-1">{username}</h3>
                   <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-4">
-                    <span className="px-3 py-1 bg-white/5 rounded-full text-xs font-bold text-white/50 border border-white/10">{educationStage}</span>
-                    <span className="px-3 py-1 bg-white/5 rounded-full text-xs font-bold text-white/50 border border-white/10">{age} лет</span>
+                    <span className="px-3 py-1 bg-nexus-blue/10 rounded-full text-[10px] font-black text-nexus-blue border border-nexus-blue/20 uppercase tracking-widest">{rank}</span>
+                    <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black text-white/40 border border-white/10 uppercase tracking-widest">{educationStage}</span>
                   </div>
 
                   <div className="space-y-2">
@@ -101,13 +135,13 @@ export const ProfileDashboard = ({ isOpen, onClose }: ProfileDashboardProps) => 
               ))}
             </div>
 
-            {/* Subjects Progress */}
+            {/* Case Files Progress */}
             <div className="glass-premium rounded-[2.5rem] p-8 mb-8">
               <h4 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <Target size={20} className="text-nexus-blue" /> Твои Миры
+                <Target size={20} className="text-nexus-blue" /> Твои Расследования
               </h4>
               <div className="grid gap-6">
-                {SUBJECTS.map(subj => {
+                {CASE_FILES.map(subj => {
                   const progress = subjectsProgression[subj.id] || 0;
                   return (
                     <div key={subj.id} className="space-y-2">
@@ -134,14 +168,14 @@ export const ProfileDashboard = ({ isOpen, onClose }: ProfileDashboardProps) => 
             {/* Goals & Achievements */}
             <div className="grid md:grid-cols-2 gap-8">
               <div className="glass-premium rounded-[2.5rem] p-8">
-                <h4 className="text-lg font-bold mb-6">Твои Цели</h4>
-                <div className="space-y-3">
-                  {goals.map((goal, i) => (
-                    <div key={i} className="flex items-center gap-3 text-sm text-white/60">
-                      <Star size={14} className="text-nexus-gold" /> {goal}
+                <h4 className="text-lg font-bold mb-6">Артефакты</h4>
+                <div className="flex flex-wrap gap-3">
+                  {artifacts.map((art, i) => (
+                    <div key={i} className="w-14 h-14 rounded-2xl bg-nexus-blue/5 flex items-center justify-center border border-nexus-blue/20 text-2xl shadow-nexus-neon">
+                      🔮
                     </div>
                   ))}
-                  {goals.length === 0 && <p className="text-white/20 italic">Цели не установлены</p>}
+                  {artifacts.length === 0 && <p className="text-white/20 text-sm italic">Артефакты еще не обнаружены</p>}
                 </div>
               </div>
 
@@ -154,11 +188,37 @@ export const ProfileDashboard = ({ isOpen, onClose }: ProfileDashboardProps) => 
                     </div>
                   ))}
                   {achievements.length === 0 && (
-                    <div className="text-white/20 text-sm italic">Выполняй задания, чтобы получить награды</div>
+                    <div className="text-white/20 text-sm italic">Выполняй расследования</div>
                   )}
                 </div>
               </div>
             </div>
+            </motion.div>
+            )}
+
+            {activeTab === 'social' && (
+              <motion.div
+                key="social-tab"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+              >
+                <Leaderboard />
+              </motion.div>
+            )}
+
+            {activeTab === 'analytics' && (
+              <motion.div
+                key="analytics-tab"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+              >
+                <ParentAnalytics />
+              </motion.div>
+            )}
+            </AnimatePresence>
+
           </div>
         </motion.div>
       )}
