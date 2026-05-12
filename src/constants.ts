@@ -3,6 +3,7 @@ export const CASE_FILES = [
   { id: 'russian', name: 'Русский язык', icon: 'BookOpen', color: '#4b79ff' },
   { id: 'history', name: 'История', icon: 'Shield', color: '#ff9c4b' },
   { id: 'english', name: 'Английский язык', icon: 'Languages', color: '#4bff9c' },
+  { id: 'literature', name: 'Литература', icon: 'PenTool', color: '#ff4be3' },
 ];
 
 export const ACHIEVEMENTS = [
