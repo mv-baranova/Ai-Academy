@@ -5,31 +5,41 @@
 @layer base {
   :root {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #050505;
+    background-color: #020205;
     color: white;
   }
 
   body {
     @apply overflow-hidden;
     -webkit-tap-highlight-color: transparent;
+    background: #020205;
   }
 }
 
 @layer components {
   .glass-premium {
-    @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-nexus-glass;
+    @apply bg-white/5 backdrop-blur-3xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
+    background: rgba(255, 255, 255, 0.03);
   }
 
   .glass-card {
-    @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10;
+    @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl border border-white/10;
   }
 
   .neon-text-blue {
-    text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+    text-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
   }
 
   .neon-text-purple {
-    text-shadow: 0 0 15px rgba(112, 0, 255, 0.5);
+    text-shadow: 0 0 20px rgba(112, 0, 255, 0.6);
+  }
+
+  .shadow-nexus-neon {
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+  }
+
+  .shadow-nexus-neon-purple {
+    box-shadow: 0 0 20px rgba(112, 0, 255, 0.3);
   }
 }
 
@@ -41,6 +51,19 @@
   scrollbar-width: none;
 }
 
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 242, 255, 0.2);
+  border-radius: 10px;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
@@ -50,10 +73,27 @@
   animation: float 6s ease-in-out infinite;
 }
 
-/* Custom Glassmorphism Utility */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
+}
+
+/* Duolingo/Netflix Style Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply tracking-tighter;
+}
+
+.italic {
+  font-style: italic;
+}
+
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
