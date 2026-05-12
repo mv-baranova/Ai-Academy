@@ -56,9 +56,9 @@ function App() {
                 <div className="w-2 h-2 rounded-full bg-nexus-blue animate-pulse shadow-nexus-neon" />
                 <div className="h-px w-12 bg-gradient-to-l from-transparent to-nexus-blue" />
               </div>
-              <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase italic text-center leading-none">
+              <h1 className="text-7xl md:text-9xl font-black tracking-tighter uppercase italic text-center leading-[0.8] mb-4">
                 Орден <br/>
-                <span className="text-nexus-blue neon-text-blue block mt-2">Знаний</span>
+                <span className="text-nexus-blue neon-text-blue block mt-4">Знаний</span>
               </h1>
               <div className="flex items-center gap-3 mt-6">
                  <span className="text-white/20 text-[10px] tracking-[0.6em] uppercase font-black">Archive Access Level: Clear</span>
@@ -67,18 +67,13 @@ function App() {
 
             {/* Content Explorer */}
             <div className="w-full max-w-6xl pointer-events-auto mt-auto mb-12">
-              <div className="flex items-center justify-between mb-6 px-4">
-                 <div className="flex items-center gap-3">
-                    <div className="w-1 h-8 bg-nexus-blue rounded-full" />
-                    <div>
-                       <h3 className="font-black uppercase tracking-widest text-sm">Доступные Архивы</h3>
-                       <p className="text-[10px] text-white/30 uppercase font-bold">Выберите дело для исследования</p>
-                    </div>
+              <div className="flex flex-col items-center mb-10">
+                 <div className="flex items-center gap-6 mb-2">
+                    <div className="h-px w-20 bg-gradient-to-r from-transparent to-white/10" />
+                    <h3 className="font-black uppercase tracking-[0.5em] text-xs text-white/40">Доступные Архивы</h3>
+                    <div className="h-px w-20 bg-gradient-to-l from-transparent to-white/10" />
                  </div>
-                 <div className="flex items-center gap-2 text-white/20">
-                    <span className="text-[10px] font-black uppercase tracking-widest">Листайте вправо</span>
-                    <ChevronDown className="rotate-[-90deg]" size={14} />
-                 </div>
+                 <p className="text-[10px] text-nexus-blue uppercase font-black tracking-widest">Выберите сферу исследования</p>
               </div>
               <SubjectPortals onSelect={setSelectedSubjectId} />
             </div>
@@ -91,11 +86,14 @@ function App() {
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleOpenTutor()}
-                className="flex-1 glass-premium py-6 rounded-[2.5rem] flex items-center justify-center gap-4 font-black text-nexus-blue shadow-nexus-neon border border-nexus-blue/30 uppercase tracking-[0.2em] text-sm relative overflow-hidden group"
+                className="flex-[2] glass-premium py-8 rounded-[3rem] flex flex-col items-center justify-center gap-2 font-black text-white shadow-[0_0_40px_rgba(0,242,255,0.15)] border border-white/10 uppercase tracking-[0.3em] text-sm relative overflow-hidden group"
               >
-                <div className="absolute inset-0 bg-nexus-blue/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <Sparkles size={20} className="group-hover:animate-spin-slow" />
-                Магистр ИИ
+                <div className="absolute inset-0 bg-gradient-to-br from-nexus-blue/20 to-nexus-purple/20 opacity-0 group-hover:opacity-100 transition-all duration-700" />
+                <div className="flex items-center gap-4 text-nexus-blue">
+                  <Sparkles size={24} className="group-hover:animate-spin-slow shadow-nexus-neon" />
+                  <span className="text-xl italic tracking-tighter">Спросить Магистра</span>
+                </div>
+                <span className="text-[10px] text-white/40 tracking-[0.5em]">Доступ к ИИ Интеллекту</span>
               </motion.button>
 
               <motion.button
