@@ -18,11 +18,16 @@ export interface UserState {
   achievements: string[];
   subjectsProgression: Record<string, number>;
   completedLessons: string[];
+  streak: number;
+  lastActive: string;
+  mysteryTokens: number;
+  unlockedMysteries: string[];
 
   // New Character System properties
   gender: 'male' | 'female' | 'other' | '';
   appearance: string;
   rank: string;
+  role: string;
   titles: string[];
   artifacts: string[];
   isPremium: boolean;
@@ -37,6 +42,8 @@ export interface UserState {
   addArtifact: (id: string) => void;
   addTitle: (title: string) => void;
   addTokens: (amount: number) => void;
+  updateStreak: () => void;
+  unlockMystery: (mysteryId: string) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -56,11 +63,16 @@ export const useUserStore = create<UserState>()(
       achievements: [],
       subjectsProgression: {},
       completedLessons: [],
+      streak: 1,
+      lastActive: new Date().toISOString(),
+      mysteryTokens: 0,
+      unlockedMysteries: [],
 
       // Defaults for Character System
       gender: '',
       appearance: 'standard',
-      rank: 'Послушник',
+      rank: 'Новичок',
+      role: 'Следователь смыслов',
       titles: ['Искатель Истины'],
       artifacts: [],
       isPremium: false,
@@ -80,16 +92,22 @@ export const useUserStore = create<UserState>()(
           newLevel += 1;
         }
 
-        // Auto-rank up logic
+        // Auto-rank up logic (Order of Knowledge Ranks)
         let newRank = state.rank;
-        if (newLevel >= 5) newRank = 'Странник';
-        if (newLevel >= 10) newRank = 'Мастер';
-        if (newLevel >= 20) newRank = 'Мудрец';
+        if (newLevel >= 2) newRank = 'Стажёр Ордена';
+        if (newLevel >= 5) newRank = 'Искатель';
+        if (newLevel >= 10) newRank = 'Аналитик';
+        if (newLevel >= 20) newRank = 'Магистр';
+        if (newLevel >= 50) newRank = 'Архонт знаний';
+
+        // Reward mystery tokens on level up
+        const mysteryBonus = newLevel > state.level ? 1 : 0;
 
         return {
           xp: finalXP,
           level: newLevel,
-          rank: newRank
+          rank: newRank,
+          mysteryTokens: state.mysteryTokens + mysteryBonus
         };
       }),
 
@@ -125,6 +143,30 @@ export const useUserStore = create<UserState>()(
       addTokens: (amount) => set((state) => ({
         tokens: state.tokens + amount
       })),
+
+      unlockMystery: (mysteryId) => set((state) => ({
+          unlockedMysteries: [...state.unlockedMysteries, mysteryId],
+          mysteryTokens: Math.max(0, state.mysteryTokens - 1)
+      })),
+
+      updateStreak: () => set((state) => {
+        const last = new Date(state.lastActive);
+        const now = new Date();
+        const diff = (now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24);
+
+        if (diff > 1 && diff < 2) {
+            // Reward for streak
+            const bonusXP = (state.streak + 1) * 50;
+            return {
+                streak: state.streak + 1,
+                lastActive: now.toISOString(),
+                xp: state.xp + bonusXP
+            };
+        } else if (diff >= 2) {
+          return { streak: 1, lastActive: now.toISOString() };
+        }
+        return { lastActive: now.toISOString() };
+      }),
     }),
     {
       name: 'nexus-user-storage',
