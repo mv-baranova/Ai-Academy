@@ -19,16 +19,19 @@ export const MagisterTutor = ({ isOpen, onClose, initialContext }: MagisterTutor
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([
-        {
-          role: 'assistant',
-          content: `Приветствую, Искатель ${username}! Я Магистр Знаний. ${initialContext ? `Вижу, твоё расследование привело тебя к "${initialContext}".` : 'Любой вопрос — это начало нового пути. О чем хочешь узнать?'}`,
-          timestamp: Date.now()
-        }
-      ]);
-    }
-  }, [username, initialContext, messages.length]);
+    setMessages(prev => {
+      if (prev.length === 0) {
+        return [
+          {
+            role: 'assistant',
+            content: `Приветствую, Искатель ${username}! Я Магистр Знаний. ${initialContext ? `Вижу, твоё расследование привело тебя к "${initialContext}".` : 'Все архивы Ордена открыты перед тобой.'} Чем я могу помочь?`,
+            timestamp: Date.now()
+          }
+        ];
+      }
+      return prev;
+    });
+  }, [username, initialContext]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -87,26 +90,23 @@ export const MagisterTutor = ({ isOpen, onClose, initialContext }: MagisterTutor
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="fixed inset-0 z-[150] bg-[#050505]/98 backdrop-blur-3xl flex flex-col md:left-auto md:w-[550px] border-l border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
+          className="fixed inset-0 z-[150] bg-[#050505]/95 backdrop-blur-2xl flex flex-col md:left-auto md:w-[500px] border-l border-white/10 shadow-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="p-8 border-b border-white/10 flex items-center justify-between glass-premium relative">
+          <div className="p-6 border-b border-white/10 flex items-center justify-between glass-premium relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-nexus-blue via-nexus-purple to-nexus-blue opacity-50" />
 
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-4">
               <div className="relative group">
-                <div className="w-16 h-16 rounded-[1.5rem] bg-nexus-blue/10 flex items-center justify-center border border-nexus-blue/30 shadow-nexus-neon group-hover:scale-105 transition-all duration-500">
-                  <Bot className="text-nexus-blue w-9 h-9" />
+                <div className="w-14 h-14 rounded-2xl bg-nexus-blue/10 flex items-center justify-center border border-nexus-blue/30 shadow-nexus-neon group-hover:scale-105 transition-transform">
+                  <Sparkles className="text-nexus-blue w-7 h-7" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-4 border-[#050505] animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-4 border-[#050505] animate-pulse" />
               </div>
               <div>
-                <h2 className="font-black text-2xl uppercase italic tracking-tighter leading-none mb-1">Спросить <span className="text-nexus-blue">Магистра</span></h2>
+                <h2 className="font-black text-xl uppercase italic tracking-tighter">Магистр <span className="text-nexus-blue">Знаний</span></h2>
                 <div className="flex items-center gap-2">
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-nexus-blue/40" />)}
-                  </div>
-                  <span className="text-[9px] text-white/30 uppercase tracking-[0.3em] font-black">Интеллект Ордена активен</span>
+                  <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-black">AI Mentor System v2.0</span>
                 </div>
               </div>
             </div>

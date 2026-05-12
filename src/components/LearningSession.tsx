@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CaseFileContent, Investigation, QuizQuestion } from '../data/educationalContent';
-import { X, CheckCircle2, AlertCircle, Sparkles, HelpCircle, ArrowRight, Binary, FileText, Calendar, Map, Activity } from 'lucide-react';
+import { X, CheckCircle2, AlertCircle, Sparkles, HelpCircle, ArrowRight } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
 
 interface LearningSessionProps {
@@ -16,20 +16,8 @@ export const LearningSession = ({ subject, onClose, onOpenTutor }: LearningSessi
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [showHint, setShowHint] = useState(false);
-  const [showAnalogy, setShowAnalogy] = useState(false);
 
   const { addXP, addCompletedLesson } = useUserStore();
-
-  const getVisualIcon = (type?: string) => {
-    switch (type) {
-      case 'fraction': return <Binary className="text-nexus-blue" />;
-      case 'equation': return <Activity className="text-nexus-blue" />;
-      case 'timeline': return <Calendar className="text-nexus-blue" />;
-      case 'map': return <Map className="text-nexus-blue" />;
-      case 'scheme': return <FileText className="text-nexus-blue" />;
-      default: return null;
-    }
-  };
 
   const handleStart = (investigation: Investigation) => {
     setActiveInvestigation(investigation);
@@ -143,45 +131,18 @@ export const LearningSession = ({ subject, onClose, onOpenTutor }: LearningSessi
                   </div>
 
                   <div className="prose prose-invert max-w-none">
-                    <p className="text-2xl leading-relaxed text-white font-medium tracking-tight">{activeInvestigation.content}</p>
+                    <p className="text-xl leading-relaxed text-white/80 font-medium">{activeInvestigation.content}</p>
                   </div>
 
-                  {activeInvestigation.visualElement && (
-                    <div className="w-full aspect-video glass-premium rounded-[2rem] border border-white/10 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-nexus-blue/5 to-nexus-purple/5">
-                      <div className="p-6 bg-white/5 rounded-full border border-white/10 animate-pulse">
-                        {getVisualIcon(activeInvestigation.visualElement)}
+                  {activeInvestigation.example && (
+                    <div className="bg-nexus-blue/5 border-l-4 border-nexus-blue p-8 rounded-r-3xl relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-4 opacity-10">
+                        <Sparkles size={48} className="text-nexus-blue" />
                       </div>
-                      <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">
-                         Интерактивная визуализация: {activeInvestigation.visualElement}
-                      </div>
+                      <div className="text-[10px] text-nexus-blue font-black uppercase tracking-[0.2em] mb-3">Улика / Пример</div>
+                      <div className="text-white/90 italic text-lg leading-relaxed">{activeInvestigation.example}</div>
                     </div>
                   )}
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                    {activeInvestigation.analogy && (
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        onClick={() => setShowAnalogy(!showAnalogy)}
-                        className="glass-premium p-8 rounded-[2rem] border border-nexus-purple/30 bg-nexus-purple/5 cursor-pointer relative overflow-hidden group"
-                      >
-                         <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-110 transition-transform">
-                            <Sparkles size={32} className="text-nexus-purple" />
-                         </div>
-                         <div className="text-[10px] text-nexus-purple font-black uppercase tracking-[0.3em] mb-4">Интуитивное объяснение</div>
-                         <div className="text-white font-bold leading-snug">
-                            {showAnalogy ? activeInvestigation.analogy : "Как это работает на пальцах?"}
-                         </div>
-                         {!showAnalogy && <div className="mt-4 text-[10px] text-nexus-purple font-black uppercase tracking-widest animate-pulse">Нажми, чтобы раскрыть</div>}
-                      </motion.div>
-                    )}
-
-                    {activeInvestigation.example && (
-                      <div className="glass-premium p-8 rounded-[2rem] border border-nexus-blue/30 bg-nexus-blue/5 relative overflow-hidden">
-                        <div className="text-[10px] text-nexus-blue font-black uppercase tracking-[0.3em] mb-4">Реальный пример</div>
-                        <div className="text-white/90 italic font-medium leading-relaxed">{activeInvestigation.example}</div>
-                      </div>
-                    )}
-                  </div>
 
                   <button
                     onClick={() => setQuizStep(0)}
