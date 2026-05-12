@@ -41,7 +41,7 @@ function App() {
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-b from-[#010103] via-transparent to-[#010103] z-10 pointer-events-none opacity-90" />
             <Canvas camera={{ position: [0, 0, 10], fov: 40 }}>
-              <CentralHub />
+              <CentralHub activeSubject={selectedSubjectId} />
             </Canvas>
           </div>
 

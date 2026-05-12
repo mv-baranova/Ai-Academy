@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CaseFileContent, Investigation } from '../data/educationalContent';
 import { X, CheckCircle2, AlertCircle, Sparkles, HelpCircle, ArrowRight, BookOpen, Lightbulb, Image as ImageIcon, MessageSquare, Zap, Target, Star, Anchor, EyeOff, Search, GitMerge, Layers, Repeat, Cpu } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
-import { LogicChain, MentalModel, SentenceDissection } from './VisualCognition';
+import { HolographicDisplay } from './HolographicDisplay';
 
 interface LearningSessionProps {
   subject: CaseFileContent;
@@ -38,7 +38,7 @@ const SUBJECT_THEMES: Record<string, { main: string; glow: string; accent: strin
 const parseVisualScheme = (scheme: string) => {
     if (scheme.includes('| chain:')) {
         const parts = scheme.split('| chain:')[1].split('->').map(p => p.trim());
-        return <LogicChain steps={parts} />;
+        return <HolographicDisplay type="logic" data={{ steps: parts }} />;
     }
     if (scheme.includes('| model:')) {
         const [title, ...sidesRaw] = scheme.split('| model:')[1].split('|');
@@ -46,16 +46,16 @@ const parseVisualScheme = (scheme: string) => {
             const [label, content, color] = s.split(':').map(p => p.trim());
             return { label, content, color: color === 'blue' ? 'text-nexus-blue' : 'text-rose-400' };
         });
-        return <MentalModel title={title} sides={sides} />;
+        return <HolographicDisplay type="model" data={{ title, sides }} />;
     }
     if (scheme.includes('| dissection:')) {
         const parts = scheme.split('| dissection:')[1].split('|').map(p => {
             const [word, role, color] = p.split(':').map(x => x.trim());
             return { word, role, color: color === 'blue' ? 'text-nexus-blue' : color === 'purple' ? 'text-nexus-purple' : 'text-white' };
         });
-        return <SentenceDissection parts={parts} />;
+        return <HolographicDisplay type="dissection" data={{ parts }} />;
     }
-    return <div className="text-center font-mono text-3xl md:text-5xl text-nexus-blue tracking-tighter font-black bg-black/60 p-16 rounded-[3rem] border border-white/10 shadow-nexus-neon animate-glow-pulse">{scheme}</div>;
+    return <HolographicDisplay type="formula" data={{ content: scheme }} />;
 };
 
 export const LearningSession = ({ subject, onClose, onOpenTutor }: LearningSessionProps) => {
@@ -216,7 +216,7 @@ export const LearningSession = ({ subject, onClose, onOpenTutor }: LearningSessi
             </div>
           </div>
         ) : (
-          <div className="max-w-4xl mx-auto h-full flex flex-col p-10 md:p-20">
+          <div className="max-w-6xl mx-auto h-full flex flex-col p-10 md:p-20">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
@@ -286,11 +286,8 @@ export const LearningSession = ({ subject, onClose, onOpenTutor }: LearningSessi
 
                   {currentStep === 'visualScheme' && (
                     <div className="space-y-12">
-                      <div className="glass-premium p-10 rounded-[4rem] border border-white/5 flex items-center justify-center min-h-[400px] shadow-premium relative overflow-hidden">
-                        <div className={`absolute inset-0 opacity-10 ${theme.accent}`} />
-                        {parseVisualScheme(activeInvestigation.visualScheme)}
-                      </div>
-                      <p className="text-center text-white/20 text-[12px] font-black uppercase tracking-[0.5em]">Дешифровка визуального кода • Phase Alpha</p>
+                       {parseVisualScheme(activeInvestigation.visualScheme)}
+                       <p className="text-center text-white/20 text-[12px] font-black uppercase tracking-[0.5em]">Дешифровка визуального кода • Phase Alpha</p>
                     </div>
                   )}
 

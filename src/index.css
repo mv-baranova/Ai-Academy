@@ -2,53 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #020205;
-    color: white;
-  }
+:root {
+  color-scheme: dark;
+}
 
-  body {
-    @apply overflow-hidden;
-    -webkit-tap-highlight-color: transparent;
-    background: #020205;
-  }
+body {
+  margin: 0;
+  background-color: #000000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer components {
   .glass-premium {
-    @apply bg-white/5 backdrop-blur-3xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
-    background: rgba(255, 255, 255, 0.03);
+    @apply bg-premium-glass backdrop-blur-3xl border border-white/5 shadow-spatial;
   }
 
-  .glass-card {
-    @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl border border-white/10;
+  .hologram-border {
+    position: relative;
+  }
+
+  .hologram-border::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(90deg, transparent, rgba(0,242,255,0.3), transparent);
+    background-size: 200% 100%;
+    animation: hologram-scan 4s linear infinite;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    border-radius: inherit;
   }
 
   .neon-text-blue {
-    text-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5), 0 0 20px rgba(0, 242, 255, 0.3);
   }
 
-  .neon-text-purple {
-    text-shadow: 0 0 20px rgba(112, 0, 255, 0.6);
+  .spatial-layer {
+    transform-style: preserve-3d;
+    perspective: 1000px;
   }
 
-  .shadow-nexus-neon {
-    box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
-  .shadow-nexus-neon-purple {
-    box-shadow: 0 0 20px rgba(112, 0, 255, 0.3);
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+@keyframes hologram-scan {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -60,40 +68,10 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 242, 255, 0.2);
+  background: rgba(0, 242, 255, 0.1);
   border-radius: 10px;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 12s linear infinite;
-}
-
-/* Duolingo/Netflix Style Typography */
-h1, h2, h3, h4, h5, h6 {
-  @apply tracking-tighter;
-}
-
-.italic {
-  font-style: italic;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 242, 255, 0.2);
 }
