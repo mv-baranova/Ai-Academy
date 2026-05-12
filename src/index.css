@@ -11,37 +11,50 @@ body {
   background-color: #000000;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 @layer components {
   .glass-premium {
-    @apply bg-premium-glass backdrop-blur-3xl border border-white/5 shadow-spatial;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 30px 100px -10px rgba(0, 0, 0, 0.9);
+  }
+
+  .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .hologram-border {
     position: relative;
+    overflow: hidden;
   }
 
   .hologram-border::after {
     content: '';
     position: absolute;
     inset: -1px;
-    background: linear-gradient(90deg, transparent, rgba(0,242,255,0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(0,242,255,0.4), transparent);
     background-size: 200% 100%;
-    animation: hologram-scan 4s linear infinite;
+    animation: hologram-scan 6s linear infinite;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     pointer-events: none;
     border-radius: inherit;
+    opacity: 0.5;
   }
 
   .neon-text-blue {
-    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5), 0 0 20px rgba(0, 242, 255, 0.3);
+    text-shadow: 0 0 15px rgba(0, 242, 255, 0.6), 0 0 30px rgba(0, 242, 255, 0.3);
   }
 
   .spatial-layer {
     transform-style: preserve-3d;
-    perspective: 1000px;
+    perspective: 1200px;
   }
 
   .hide-scrollbar::-webkit-scrollbar {
@@ -52,6 +65,20 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .noise-texture {
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      pointer-events: none;
+      background-image: url('https://www.transparenttextures.com/patterns/p6.png');
+  }
+
+  .text-lux {
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+  }
 }
 
 @keyframes hologram-scan {
@@ -60,18 +87,23 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.01);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 242, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 242, 255, 0.2);
+}
+
+.perspective-text {
+    transform: rotateX(5deg);
+    transform-origin: bottom;
 }

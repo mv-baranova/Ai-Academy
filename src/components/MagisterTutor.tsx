@@ -119,112 +119,116 @@ ${initialContext ? `Вижу, ты изучаешь **"${initialContext}"**. Д�
             className="fixed inset-0 z-[140] bg-black/90 backdrop-blur-2xl"
           />
           <motion.div
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ type: 'spring', damping: 30, stiffness: 200 }}
-            className="fixed inset-y-0 right-0 z-[150] w-full md:w-[750px] bg-[#020205] flex flex-col border-l border-white/10 shadow-2xl overflow-hidden font-sans"
+            initial={{ x: '100%', opacity: 0, rotateY: -10 }}
+            animate={{ x: 0, opacity: 1, rotateY: 0 }}
+            exit={{ x: '100%', opacity: 0, rotateY: 10 }}
+            transition={{ type: 'spring', damping: 35, stiffness: 250 }}
+            className="fixed inset-y-0 right-0 z-[150] w-full md:w-[800px] bg-[#020205] flex flex-col border-l border-white/10 shadow-2xl overflow-hidden font-sans spatial-layer"
           >
-            {/* Header */}
-            <div className="p-12 border-b border-white/10 flex items-center justify-between glass-premium relative">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-nexus-blue via-nexus-purple to-nexus-blue opacity-50 shadow-nexus-neon" />
+            <div className="noise-texture" />
 
-              <div className="flex items-center gap-8">
+            {/* Immersive Header */}
+            <div className="p-14 border-b border-white/10 flex items-center justify-between glass-premium relative">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-nexus-blue via-nexus-purple to-nexus-blue opacity-50 shadow-nexus-neon" />
+              <div className="absolute inset-0 bg-nexus-blue/5 animate-pulse-slow pointer-events-none" />
+
+              <div className="flex items-center gap-10 relative z-10">
                 <div className="relative group">
-                  <div className="w-24 h-24 rounded-5xl bg-nexus-blue/10 flex items-center justify-center border border-nexus-blue/30 shadow-nexus-neon group-hover:scale-105 transition-all duration-700">
-                    <BrainCircuit className="text-nexus-blue w-12 h-12" />
+                  <div className="w-28 h-28 rounded-6xl bg-nexus-blue/10 flex items-center justify-center border border-nexus-blue/30 shadow-hologram group-hover:scale-105 transition-all duration-700">
+                    <BrainCircuit className="text-nexus-blue w-14 h-14" />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full border-4 border-[#020205] animate-pulse shadow-[0_0_15px_#22c55e]" />
+                  <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-green-500 rounded-full border-[6px] border-[#020205] animate-pulse shadow-[0_0_20px_#22c55e]" />
                 </div>
                 <div>
-                  <h2 className="font-black text-4xl uppercase italic tracking-tighter leading-none">Магистр <span className="text-nexus-blue neon-text-blue">Знаний</span></h2>
-                  <div className="flex items-center gap-4 mt-3">
-                    <span className="text-[10px] text-white/30 uppercase tracking-[0.4em] font-black">Cognitive Engine v6.2 Active</span>
+                  <h2 className="font-black text-5xl uppercase italic tracking-[-0.05em] leading-none mb-3">Магистр <span className="text-nexus-blue neon-text-blue">Знаний</span></h2>
+                  <div className="flex items-center gap-4">
+                    <span className="text-[12px] text-white/30 uppercase tracking-[0.6em] font-black animate-hologram-flicker">Neural Core Prime v7.1</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
-                <button onClick={clearHistory} className="p-4 hover:bg-rose-500/10 text-white/20 hover:text-rose-500 rounded-3xl transition-all" title="Очистить матрицы">
-                  <Trash2 size={28} />
+              <div className="flex items-center gap-6 relative z-10">
+                <button onClick={clearHistory} className="p-5 hover:bg-rose-500/10 text-white/20 hover:text-rose-500 rounded-4xl transition-all border border-transparent hover:border-rose-500/20" title="Flush Matrices">
+                  <Trash2 size={32} />
                 </button>
-                <button onClick={onClose} className="p-4 hover:bg-white/5 rounded-3xl transition-colors">
-                  <X size={40} />
+                <button onClick={onClose} className="p-5 hover:bg-white/5 rounded-4xl transition-all border border-white/5">
+                  <X size={48} />
                 </button>
               </div>
             </div>
 
-            {/* AI Provider Toggle */}
-            <div className="px-12 py-5 border-b border-white/5 flex gap-5 overflow-x-auto hide-scrollbar bg-black/60">
+            {/* Matrix Toggle */}
+            <div className="px-14 py-6 border-b border-white/5 flex gap-6 overflow-x-auto hide-scrollbar bg-black/60 relative z-10">
               {(['mock', 'openai', 'gemini', 'claude'] as AIProvider[]).map((p) => (
                 <button
                   key={p}
                   onClick={() => setProvider(p)}
-                  className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-3 whitespace-nowrap ${
+                  className={`px-10 py-4 rounded-3xl text-[11px] font-black uppercase tracking-[0.4em] border transition-all flex items-center gap-4 whitespace-nowrap shadow-xl ${
                     provider === p
-                    ? 'bg-nexus-blue/20 border-nexus-blue text-nexus-blue shadow-nexus-neon'
-                    : 'bg-white/5 border-white/10 text-white/40 hover:border-white/20'
+                    ? 'bg-nexus-blue/20 border-nexus-blue text-nexus-blue shadow-hologram'
+                    : 'bg-white/5 border-white/10 text-white/30 hover:border-white/20'
                   }`}
                 >
-                  <Cpu size={16} /> {p.toUpperCase()} ENGINE
+                  <Cpu size={18} /> {p} SYSTEM
                 </button>
               ))}
             </div>
 
-            {/* Messages Area */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-12 space-y-16 custom-scrollbar bg-gradient-to-b from-transparent to-nexus-blue/5">
+            {/* Neural Stream Area */}
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-14 space-y-20 custom-scrollbar bg-gradient-to-b from-transparent to-nexus-blue/5 relative z-10">
               {messages.map((msg, i) => {
                 const { intro, cards } = msg.role === 'assistant' ? parseContent(msg.content) : { intro: msg.content, cards: [] };
 
                 return (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 40, scale: 0.98 }}
+                    initial={{ opacity: 0, y: 50, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`flex gap-8 max-w-[95%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                      <div className={`w-16 h-16 rounded-3xl flex-shrink-0 flex items-center justify-center border shadow-2xl transition-all hover:scale-110 ${
+                    <div className={`flex gap-10 max-w-[98%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className={`w-20 h-20 rounded-[2.5rem] flex-shrink-0 flex items-center justify-center border shadow-2xl transition-all hover:scale-110 ${
                         msg.role === 'user'
-                          ? 'bg-nexus-purple/20 border-nexus-purple/30 text-nexus-purple shadow-nexus-neon-purple'
-                          : 'bg-nexus-blue/20 border-nexus-blue/30 text-nexus-blue shadow-nexus-neon'
+                          ? 'bg-nexus-purple/20 border-nexus-purple/40 text-nexus-purple shadow-premium-glow'
+                          : 'bg-nexus-blue/20 border-nexus-blue/40 text-nexus-blue shadow-hologram'
                       }`}>
-                        {msg.role === 'user' ? <User size={32} /> : <Bot size={32} />}
+                        {msg.role === 'user' ? <User size={40} /> : <Bot size={40} />}
                       </div>
-                      <div className={`flex flex-col gap-8 ${msg.role === 'user' ? 'items-end' : 'items-start'} flex-1`}>
+                      <div className={`flex flex-col gap-10 ${msg.role === 'user' ? 'items-end' : 'items-start'} flex-1`}>
                         {intro && (
-                          <div className={`p-10 rounded-5xl text-xl leading-relaxed shadow-premium ${
+                          <div className={`p-12 rounded-[4rem] text-2xl leading-relaxed shadow-spatial relative overflow-hidden ${
                             msg.role === 'user'
                               ? 'bg-gradient-to-br from-nexus-purple to-nexus-purple/80 text-white rounded-tr-none'
-                              : 'glass-premium text-white/90 border border-white/10 rounded-tl-none'
+                              : 'glass-premium text-white/95 border border-white/10 rounded-tl-none'
                           }`}>
-                            <div className="font-medium whitespace-pre-wrap">{intro}</div>
+                            <div className="absolute inset-0 bg-white/5 opacity-20 pointer-events-none" />
+                            <div className="font-medium whitespace-pre-wrap relative z-10">{intro}</div>
                           </div>
                         )}
 
                         {cards.length > 0 && (
-                          <div className="grid grid-cols-1 gap-8 w-full">
+                          <div className="grid grid-cols-1 gap-10 w-full">
                             {cards.map((card, cIdx) => {
                               const config = getCardConfig(card.title);
                               const Icon = config.icon;
                               return (
                                 <motion.div
                                   key={cIdx}
-                                  initial={{ opacity: 0, x: -30 }}
+                                  initial={{ opacity: 0, x: -40 }}
                                   animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: cIdx * 0.15 }}
-                                  className="glass-premium border border-white/5 rounded-6xl p-10 relative overflow-hidden group shadow-premium"
+                                  transition={{ delay: cIdx * 0.2 }}
+                                  className="glass-premium border border-white/5 rounded-[5rem] p-12 relative overflow-hidden group/card shadow-spatial"
                                 >
-                                  <div className={`absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity ${config.color}`}>
-                                    <Icon size={140} />
+                                  <div className={`absolute top-0 right-0 p-12 opacity-5 group-hover/card:opacity-20 transition-all duration-1000 group-hover/card:scale-125 ${config.color}`}>
+                                    <Icon size={180} />
                                   </div>
-                                  <div className="flex items-center gap-5 mb-8">
-                                     <div className={`p-4 rounded-3xl ${config.bg} ${config.color} border ${config.border}`}>
-                                        <Icon size={24} />
+                                  <div className="flex items-center gap-6 mb-10">
+                                     <div className={`p-5 rounded-[2rem] ${config.bg} ${config.color} border ${config.border} shadow-hologram`}>
+                                        <Icon size={32} />
                                      </div>
-                                     <h4 className="font-black text-sm uppercase tracking-[0.5em] text-white/40">{card.title}</h4>
+                                     <h4 className="font-black text-base uppercase tracking-[0.6em] text-white/30">{card.title}</h4>
                                   </div>
-                                  <div className="text-2xl text-white/90 font-medium leading-relaxed italic prose prose-invert max-w-none">
+                                  <div className="text-3xl text-white/90 font-medium leading-relaxed italic prose prose-invert max-w-none relative z-10">
                                     {card.body}
                                   </div>
                                 </motion.div>
@@ -233,10 +237,10 @@ ${initialContext ? `Вижу, ты изучаешь **"${initialContext}"**. Д�
                           </div>
                         )}
 
-                        <div className={`text-[10px] font-black uppercase tracking-[0.4em] opacity-30 px-6 ${
+                        <div className={`text-[12px] font-mono font-black uppercase tracking-[0.5em] opacity-30 px-8 ${
                           msg.role === 'user' ? 'text-right' : 'text-left'
                         }`}>
-                          {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })} • SYNC_OK
                         </div>
                       </div>
                     </div>
@@ -245,50 +249,53 @@ ${initialContext ? `Вижу, ты изучаешь **"${initialContext}"**. Д�
               })}
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="glass-premium px-12 py-8 rounded-5xl flex gap-6 border border-nexus-blue/30 shadow-nexus-neon">
-                    <div className="w-4 h-4 bg-nexus-blue rounded-full animate-bounce shadow-nexus-neon" style={{ animationDelay: '0ms' }} />
-                    <div className="w-4 h-4 bg-nexus-blue rounded-full animate-bounce shadow-nexus-neon" style={{ animationDelay: '150ms' }} />
-                    <div className="w-4 h-4 bg-nexus-blue rounded-full animate-bounce shadow-nexus-neon" style={{ animationDelay: '300ms' }} />
+                  <div className="glass-premium px-16 py-10 rounded-[3.5rem] flex gap-8 border border-nexus-blue/30 shadow-hologram relative">
+                    <div className="absolute inset-0 bg-nexus-blue/5 animate-pulse" />
+                    <div className="w-5 h-5 bg-nexus-blue rounded-full animate-bounce shadow-hologram" style={{ animationDelay: '0ms' }} />
+                    <div className="w-5 h-5 bg-nexus-blue rounded-full animate-bounce shadow-hologram" style={{ animationDelay: '200ms' }} />
+                    <div className="w-5 h-5 bg-nexus-blue rounded-full animate-bounce shadow-hologram" style={{ animationDelay: '400ms' }} />
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Input Area */}
-            <div className="p-12 bg-[#0a0a0a] border-t border-white/10 relative">
-              <div className="absolute -top-24 left-0 w-full h-24 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none" />
+            {/* Command Input Area */}
+            <div className="p-14 bg-[#010103] border-t border-white/10 relative z-20">
+              <div className="absolute -top-32 left-0 w-full h-32 bg-gradient-to-t from-[#010103] to-transparent pointer-events-none" />
 
-              <div className="relative group">
-                <div className="absolute inset-0 bg-nexus-blue/5 blur-3xl group-focus-within:bg-nexus-blue/10 transition-colors rounded-6xl" />
+              <div className="relative group/input">
+                <div className="absolute -inset-1 bg-nexus-blue/10 blur-3xl opacity-0 group-focus-within/input:opacity-100 transition-opacity rounded-[5rem]" />
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Задай свой вопрос Магистру..."
-                  className="w-full bg-white/5 border border-white/10 rounded-5xl pl-12 pr-32 py-10 focus:outline-none focus:border-nexus-blue/50 transition-all placeholder:text-white/10 text-3xl relative z-10 shadow-premium"
+                  placeholder="Дешифровать запрос..."
+                  className="w-full bg-white/5 border border-white/10 rounded-[4rem] pl-14 pr-40 py-12 focus:outline-none focus:border-nexus-blue/40 transition-all placeholder:text-white/10 text-4xl font-medium relative z-10 shadow-spatial"
                 />
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleSend}
                   disabled={!input.trim() || isTyping}
-                  className="absolute right-6 top-6 bottom-6 px-12 bg-nexus-blue text-black rounded-4xl font-black hover:shadow-nexus-neon transition-all disabled:opacity-20 flex items-center justify-center z-20 group"
+                  className="absolute right-6 top-6 bottom-6 px-16 bg-nexus-blue text-black rounded-[3rem] font-black hover:shadow-hologram transition-all disabled:opacity-20 flex items-center justify-center z-20"
                 >
-                  <Send size={40} className="group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform" />
-                </button>
+                  <Send size={48} />
+                </motion.button>
               </div>
 
-              <div className="flex items-center justify-between mt-10 px-8">
-                 <div className="flex items-center gap-5 text-[12px] text-white/20 font-black uppercase tracking-[0.4em]">
+              <div className="flex items-center justify-between mt-12 px-10">
+                 <div className="flex items-center gap-6 text-[14px] text-white/20 font-black uppercase tracking-[0.6em]">
                     <div className="flex gap-2">
-                       <span className="w-2 h-2 rounded-full bg-nexus-blue shadow-nexus-neon" />
-                       <span className="w-2 h-2 rounded-full bg-nexus-blue animate-pulse shadow-nexus-neon" />
-                       <span className="w-2 h-2 rounded-full bg-nexus-blue shadow-nexus-neon" />
+                       <span className="w-2.5 h-2.5 rounded-full bg-nexus-blue shadow-hologram" />
+                       <span className="w-2.5 h-2.5 rounded-full bg-nexus-blue animate-hologram-flicker shadow-hologram" />
+                       <span className="w-2.5 h-2.5 rounded-full bg-nexus-blue shadow-hologram" />
                     </div>
-                    Cognitive Synthesis Online
+                    Cognitive Stream Decryption Active
                  </div>
-                 <div className="flex items-center gap-4 text-[12px] text-white/20 font-black uppercase tracking-[0.4em]">
-                    <MessageSquare size={20} />
-                    {initialContext ? initialContext : 'Global Intelligence'}
+                 <div className="flex items-center gap-5 text-[14px] text-white/20 font-black uppercase tracking-[0.6em] animate-pulse">
+                    <MessageSquare size={24} />
+                    {initialContext ? initialContext : 'Global Archive Access'}
                  </div>
               </div>
             </div>
